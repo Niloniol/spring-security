@@ -16,7 +16,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
-    private String name;
+    private String username;
 
     @Column(name = "email")
     private String email;
@@ -30,8 +30,8 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String email, String password, Set<Role> roles) {
-        this.name = name;
+    public User(String username, String email, String password, Set<Role> roles) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
@@ -39,7 +39,7 @@ public class User implements UserDetails {
 
     public User(User user) {
         this.id = user.id;
-        this.name = user.name;
+        this.username = user.username;
         this.email = user.email;
         this.password = user.password;
         this.roles = user.roles;
@@ -53,8 +53,8 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -77,6 +77,15 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public String getRolesString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Role role : roles) {
+            stringBuilder.append(role);
+            stringBuilder.append(" / ");
+        }
+        return stringBuilder.toString();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -89,7 +98,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
