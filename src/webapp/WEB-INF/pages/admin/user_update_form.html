@@ -7,9 +7,14 @@
 </head>
 <body>
 <form method="post" action="#" th:action="@{/updateUser}" th:object="${rEntity}">
-    <input type="text" placeholder="FirstName" th:field="*{firstName}"><br>
-    <input type="text" placeholder="LastName" th:field="*{lastName}"><br>
+    <input type="text" placeholder="Username" th:field="*{username}"><br>
     <input type="text" placeholder="E-mail" th:field="*{email}"><br><br>
+
+    <ul>
+        <li th:each="role : ${role_set}">
+            <input type="checkbox" th:field="${rEntity.addRole(role)}" th:value="${role.role}">
+        </li>
+    </ul>
     <input type="submit" value="Update">
 </form>
 </body>

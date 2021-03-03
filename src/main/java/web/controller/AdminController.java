@@ -25,7 +25,12 @@ public class AdminController {
 
         List<User> userList = userService.listUsers();
         model.addAttribute("user_list", userList);
-        return "admin";
+        return "admin/admin";
+    }
+
+    @RequestMapping(value = "/admin/admin", method = RequestMethod.GET)
+    public String getPage(){
+        return "redirect:/admin/admin";
     }
 
     @ModelAttribute(value = "userEntity")
@@ -37,14 +42,14 @@ public class AdminController {
     public String addUsers(@ModelAttribute("userEntity") User user) {
         UserService userService = context.getBean(UserService.class);
         userService.add(user);
-        return "redirect:/admin";
+        return "admin/admin";
     }
 
     @RequestMapping(value = "/actionUser", method = RequestMethod.POST, params = "action=Delete")
     public String deleteUser(@ModelAttribute("userEntity") User user) {
         UserService userService = context.getBean(UserService.class);
         userService.remove(user);
-        return "redirect:/admin";
+        return "admin/admin";
     }
 
 

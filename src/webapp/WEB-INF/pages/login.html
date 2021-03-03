@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.springframework.org/security/tags">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Login</title>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+    <meta http-equiv="refresh" content="0, URL=/"/>
+</sec:authorize>
 <div>
-    <form method="post" action="/login">
-        <input name="j_username"/>
-        <input name="j_password"/>
-        <input type="submit"/>
+    <form method="POST" th:action="@{/login}">
+        <h2>Вход в систему</h2>
+        <div>
+            <input name="username" type="text" placeholder="Username" autofocus/>
+            <input name="password" type="password" placeholder="Password"/>
+            <button type="submit">Log In</button>
+            <h4><a th:href="@{/registration}">Зарегистрироваться</a></h4>
+        </div>
     </form>
 </div>
 </body>
