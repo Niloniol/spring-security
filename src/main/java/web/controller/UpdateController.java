@@ -21,6 +21,9 @@ public class UpdateController {
     @Autowired
     private ApplicationContext context;
 
+    @Autowired
+    private UserService userService;
+
     private Long userId;
 
     @RequestMapping(value = "/setUser", method = RequestMethod.GET)
@@ -49,7 +52,7 @@ public class UpdateController {
                               ModelMap modelMap) {
 
         if(!str.equals("cancel")) {
-            UserService userService = context.getBean(UserService.class);
+            userService = context.getBean(UserService.class);
             user.setId(userId);
             userService.update(user);
             userId = null;

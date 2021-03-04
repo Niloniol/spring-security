@@ -1,6 +1,7 @@
 package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import web.model.Role;
 
 import javax.persistence.EntityManager;
@@ -8,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.List;
 
+@Repository
 public class RoleDaoImpl implements RoleDao{
 
     @Autowired
@@ -38,7 +40,7 @@ public class RoleDaoImpl implements RoleDao{
     @Override
     public Role getByName(String name) {
         EntityManager entityManager = getEntityManager();
-        Query query = entityManager.createQuery("from Role where name=?")
+        Query query = entityManager.createQuery("from Role where role=?")
                 .setParameter(1, name);
         return (Role)query.getSingleResult();
     }
@@ -53,7 +55,7 @@ public class RoleDaoImpl implements RoleDao{
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Role> listUsers() {
+    public List<Role> listRoles() {
         EntityManager entityManager = getEntityManager();
         Query query = entityManager.createQuery("from Role");
         return query.getResultList();

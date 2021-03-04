@@ -11,5 +11,5 @@ public interface RoleDao {
     Role getById(Long id);
     Role getByName(String name);
     void update(Role role);
-    List<Role> listUsers();
+    List<Role> listRoles();
 }

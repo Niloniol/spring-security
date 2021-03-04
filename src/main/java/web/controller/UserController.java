@@ -30,10 +30,14 @@ public class UserController {
 
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
 	public String getUsername(Principal principal, ModelMap model) {
-		String name = principal.getName();
-		if(name != null) {
-			model.addAttribute("current_user", name);
+		String name;
+		try {
+			name = principal.getName();
+		} catch (NullPointerException e){
+			name = "";
 		}
+
+		model.addAttribute("current_user", name);
 		return "hello";
 	}
 

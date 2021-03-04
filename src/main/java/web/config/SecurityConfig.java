@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import web.config.handler.LoginSuccessHandler;
+import web.dao.RoleDaoImpl;
 import web.model.Role;
 import web.service.UserService;
 
@@ -28,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
 
-
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
                           LoginSuccessHandler loginSuccessHandler) {
         this.userDetailsService = userDetailsService;
@@ -37,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("ADMIN")
+                .password(passwordEncoder().encode("ADMIN")).authorities("ADMIN");
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -53,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Указываем параметры логина и пароля с формы логина
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/hello", true)
                 // даем доступ к форме логина всем
                 .permitAll();
 
@@ -71,10 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 //страницы аутентификаци доступна всем
-                .antMatchers("/login", "/hello", "/registration").anonymous()
+                .antMatchers("/login", "/hello", "/registration").permitAll()
                 // защищенные URL
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER')")
-                .antMatchers("/admin/**").access("hasAnyRole('ADMIN')")
+                .antMatchers("/user").access("hasAnyAuthority('ROLE_USER')")
+                .antMatchers("/**").access("hasAnyAuthority('ADMIN')")
                 .anyRequest().authenticated();
     }
 
@@ -83,11 +84,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(name = "rolesSet")
-    public Set<Role> getRolesSet(){
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(new Role("ADMIN"));
-        roleSet.add(new Role("ROLE_USER"));
-        return roleSet;
-    }
 }
