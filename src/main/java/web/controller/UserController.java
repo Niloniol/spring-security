@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import web.model.Role;
+import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
@@ -23,6 +25,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private RoleService roleService;
+
 	@GetMapping
 	public String getPage() {
 		return "hello";
@@ -37,7 +42,7 @@ public class UserController {
 			name = "";
 		}
 
-		model.addAttribute("current_user", name);
+		model.addAttribute("current_user", "Hello, " + name);
 		return "hello";
 	}
 
@@ -47,6 +52,12 @@ public class UserController {
         if(logout != null && logout.equals("logout")){
         	modelMap.addAttribute("message", "You are logged out");
 		}
+
+		if(roleService.listRoles().isEmpty()){
+			roleService.add(new Role("ROLE_USER"));
+			roleService.add(new Role("ROLE_ADMIN"));
+		}
+
 		return "login";
     }
 

@@ -10,20 +10,21 @@
 
     <th:block th:object="${current_user}">
         <p>
-        <h1>Your account</h1><br>
+        <h2>Your account</h2><br>
 
         <p>
-        <h2>Username</h2><br>
-        <h3 th:utext="*{username}"></h3>
+        <h3>Username</h3>
+        <h4 th:utext="*{username}"></h4>
 
         <p>
-        <h2>E-mail</h2><br>
-        <h3 th:utext="*{email}"></h3>
+        <h3>E-mail</h3>
+        <h4 th:utext="*{email}"></h4>
 
         <p>
-        <h2>Roles</h2><br>
-        <h3 th:utext="*{getRolesString()}"></h3>
+        <h3>Roles</h3>
+        <h4 th:utext="*{getRolesString()}"></h4>
     </th:block>
+    <a th:href="@{/}">Home</a>
 
 </body>
 </html>

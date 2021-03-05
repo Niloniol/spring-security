@@ -14,12 +14,10 @@
         <h4><a th:href="@{/registration}">Register</a></h4>
     </sec:authorize>
 
-    <sec:authorize access="hasAuthorities('ROLE_USER')">
     <h4><a th:href="@{/user}">Show account information</a></h4>
-    </sec:authorize>
-    <sec:authorize access="hasAuthorities('ADMIN')">
-    <h4><a th:href="@{/admin/admin}">Clients</a></h4>
-    </sec:authorize>
+
+    <h4><a th:href="@{/admin/getAllUsers}">Clients</a></h4>
+
     <sec:authorize access="isAuthenticated()">
         <h4><a th:href="@{/logout}">Log out</a></h4>
     </sec:authorize>

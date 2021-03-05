@@ -8,10 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.dao.RoleDao;
 import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,21 +24,30 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private RoleDao roleDao;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
-    public boolean add(User user) {
-        User existedUser = userDao.getByName(user.getUsername());
-
-        if (existedUser != null){
-            return false;
-        }
-
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public boolean add(User user, List<Role> roles) {
+        if (userInit(user, roles)) return false;
         userDao.add(user);
         return true;
+    }
+
+    private boolean userInit(User user, List<Role> rolesCh) {
+
+        List<Role> newRoles = new ArrayList<>();
+        if(!rolesCh.isEmpty()){
+            for (Role role : rolesCh) {
+                newRoles.add(roleDao.getByName(role.getRole()));
+            }
+        }
+        user.setRoles(newRoles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return false;
     }
 
     @Transactional
@@ -59,15 +70,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public boolean update(User user) {
-        User existedUser = userDao.getByName(user.getUsername());
-
-        if (existedUser != null){
-            return false;
-        }
-
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public boolean update(User user, List<Role> roles) {
+        if (userInit(user, roles)) return false;
         userDao.update(user);
         return true;
     }

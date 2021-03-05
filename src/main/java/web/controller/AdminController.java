@@ -19,41 +19,41 @@ public class AdminController {
     @Autowired
     private ApplicationContext context;
 
-    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value = "/admin/getAllUsers", method = RequestMethod.GET)
     public String getAllUsers(ModelMap model){
-        UserService userService = context.getBean(UserService.class);
 
         List<User> userList = userService.listUsers();
         model.addAttribute("user_list", userList);
         return "admin/admin";
     }
 
-    @RequestMapping(value = "/admin/admin", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/admin/admin", method = RequestMethod.GET)
     public String getPage(){
-        return "redirect:/admin/admin";
-    }
+        return "admin/admin";
+    }*/
 
     @ModelAttribute(value = "userEntity")
     public User newEntity() {
         return new User();
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/admin/addUser", method = RequestMethod.POST)
     public String addUsers(@ModelAttribute("userEntity") User user) {
-        UserService userService = context.getBean(UserService.class);
         userService.add(user);
         return "admin/admin";
-    }
+    }*/
 
-    @RequestMapping(value = "/actionUser", method = RequestMethod.POST, params = "action=Delete")
+    @RequestMapping(value = "/admin/actionUser", method = RequestMethod.POST, params = "action=Delete")
     public String deleteUser(@ModelAttribute("userEntity") User user) {
-        UserService userService = context.getBean(UserService.class);
         userService.remove(user);
-        return "admin/admin";
+        return "redirect:/admin/getAllUsers";
     }
 
 
-    @RequestMapping(value = "/actionUser", method = RequestMethod.POST, params = "action=Update or Add")
+    @RequestMapping(value = "/admin/actionUser", method = RequestMethod.POST, params = "action=Update or Add")
     public String updateUser(@ModelAttribute("userEntity") final User user,
                              final RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("entity", user);

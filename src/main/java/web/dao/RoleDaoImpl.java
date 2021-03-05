@@ -3,6 +3,7 @@ package web.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import web.model.Role;
+import web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -40,9 +41,13 @@ public class RoleDaoImpl implements RoleDao{
     @Override
     public Role getByName(String name) {
         EntityManager entityManager = getEntityManager();
-        Query query = entityManager.createQuery("from Role where role=?")
-                .setParameter(1, name);
-        return (Role)query.getSingleResult();
+        Query query = entityManager.createQuery("from Role where role=?0")
+                .setParameter(0, name);
+        try {
+            return (Role)query.getSingleResult();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     @Override

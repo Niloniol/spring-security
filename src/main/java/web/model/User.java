@@ -4,9 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "USERS")
@@ -28,20 +26,14 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
 
-
-    /*@JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )*/
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<Role> roles;
 
     public User() {
-        roles = new HashSet<>();
+        roles = new ArrayList<>();
     }
 
-    public User(String username, String email, String password, Set<Role> roles) {
+    public User(String username, String email, String password, List<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -80,11 +72,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -95,7 +87,7 @@ public class User implements UserDetails {
     public String getRolesString(){
         StringBuilder stringBuilder = new StringBuilder();
         for (Role role : roles) {
-            stringBuilder.append(role);
+            stringBuilder.append(role.getRole());
             stringBuilder.append(" / ");
         }
         return stringBuilder.toString();

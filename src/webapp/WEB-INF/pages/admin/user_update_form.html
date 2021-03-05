@@ -8,14 +8,21 @@
 <body>
 <form method="post" action="#" th:action="@{/updateUser}" th:object="${rEntity}">
     <input type="text" placeholder="Username" th:field="*{username}"><br>
-    <input type="text" placeholder="E-mail" th:field="*{email}"><br><br>
+    <input type="text" placeholder="E-mail" th:field="*{email}"><br>
+    <input type="password" placeholder="Password" th:field="*{password}"><br><br>
 
-    <ul>
-        <li th:each="role : ${role_set}">
-            <input type="checkbox" th:field="${rEntity.addRole(role)}" th:value="${role.role}">
-        </li>
-    </ul>
+    <label>Roles:
+        <input type="checkbox" name="roles"
+               th:each="role : ${role_list}"
+               th:text="${role.role}"
+               th:value="${role.role}"
+               th:field="*{roles}"
+        />
+    </label>
+
     <input type="submit" value="Update">
 </form>
+
+<a th:href="@{/}">Home</a>
 </body>
 </html>

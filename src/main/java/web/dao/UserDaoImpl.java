@@ -38,10 +38,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getByName(String name) {
         EntityManager entityManager = getEntityManager();
-        Query query = entityManager.createQuery("from User where username=?")
-                .setParameter(0, name);
+        Query query = entityManager.createQuery("from User where username=:name")
+                .setParameter("name", name);
         try {
-            return (User)query.getSingleResult();
+            return (User) query.getSingleResult();
         } catch (Exception e){
             return null;
         }

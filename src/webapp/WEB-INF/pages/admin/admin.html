@@ -9,7 +9,7 @@
 
 <p>
 
-<form method="post" action="#" th:action="@{/actionUser}" th:object="${userEntity}">
+<form method="post" action="#" th:action="@{/admin/actionUser}" th:object="${userEntity}">
     <input type="submit" name="action" value="Delete">
     <input type="submit" name="action" value="Update or Add">
 
@@ -35,6 +35,6 @@
 
     </table>
 </form>
-    <a th:href="@{/}">Главная</a>
+    <a th:href="@{/}">Home</a>
 </body>
 </html>
