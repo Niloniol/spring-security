@@ -1,11 +1,10 @@
 package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.RoleDao;
 import web.model.Role;
+import web.repository.RoleRepository;
 
 import java.util.List;
 
@@ -13,47 +12,47 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleDao roleDao;
+    private RoleRepository roleRepository;
 
     @Transactional
     @Override
     public boolean add(Role role) {
-        Role existedRole = roleDao.getByName(role.getRole());
+        Role existedRole = roleRepository.findByusername(role.getRole());
 
         if (existedRole != null){
             return false;
         }
-        roleDao.add(role);
+        roleRepository.save(role);
         return true;
     }
 
     @Transactional
     @Override
     public Role getById(Long id) {
-        return roleDao.getById(id);
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public Role getByName(String name) {
-        return roleDao.getByName(name);
+        return roleRepository.findByusername(name);
     }
 
     @Transactional
     @Override
     public boolean update(Role role) {
-        Role existedRole = roleDao.getByName(role.getRole());
+        Role existedRole = roleRepository.findByusername(role.getRole());
 
         if (existedRole != null){
             return false;
         }
-        roleDao.update(role);
+        roleRepository.save(role);
         return true;
     }
 
     @Transactional
     @Override
     public List<Role> listRoles() {
-        return roleDao.listRoles();
+        return roleRepository.findAll();
     }
 }

@@ -1,48 +1,37 @@
 package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import web.dao.RoleDao;
-import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
+import web.repository.RoleRepository;
+import web.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+    @PersistenceContext
+    private EntityManager em;
     @Autowired
-    private UserDao userDao;
-
+    UserRepository userRepository;
     @Autowired
-    private RoleDao roleDao;
-
+    RoleRepository roleRepository;
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
-
-    @Transactional
-    @Override
-    public boolean add(User user, List<Role> roles) {
-        if (userInit(user, roles)) return false;
-        userDao.add(user);
-        return true;
-    }
 
     private boolean userInit(User user, List<Role> rolesCh) {
 
         List<Role> newRoles = new ArrayList<>();
         if(!rolesCh.isEmpty()){
             for (Role role : rolesCh) {
-                newRoles.add(roleDao.getByName(role.getRole()));
+                newRoles.add(roleRepository.findByusername(role.getRole()));
             }
         }
         user.setRoles(newRoles);
@@ -50,36 +39,47 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    @Transactional
     @Override
-    public void remove(User user) {
-        userDao.remove(user);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public User getById(Long id) {
-        return userDao.getById(id);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public User getByName(String name) {
-        return userDao.getByName(name);
-    }
-
-    @Transactional
-    @Override
-    public boolean update(User user, List<Role> roles) {
+    public boolean add(User user, List<Role> roles) {
         if (userInit(user, roles)) return false;
-        userDao.update(user);
+        userRepository.save(user);
         return true;
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public List<User> listUsers() {
-        return userDao.listUsers();
+    public boolean remove(User user) {
+        User findUser = userRepository.findByName(user.getUsername());
+        if (findUser != null) {
+            userRepository.deleteById(findUser.getId());
+            return true;
+        }
+        return false;
     }
 
+    @Override
+    public User getById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User getByName(String name) throws UsernameNotFoundException {
+        User user = userRepository.findByName(name);
+
+        if (user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
+
+    @Override
+    public boolean update(User user, List<Role> roles) {
+        if (userInit(user, roles)) return false;
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public List<User> listUsers() {
+        return userRepository.findAll();
+    }
 }

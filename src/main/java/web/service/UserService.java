@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
     boolean add(User user, List<Role> roles);
-    void remove(User user);
+    boolean remove(User user);
     User getById(Long id);
     User getByName(String name);
     boolean update(User user, List<Role> roles);

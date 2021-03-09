@@ -13,8 +13,6 @@ import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
