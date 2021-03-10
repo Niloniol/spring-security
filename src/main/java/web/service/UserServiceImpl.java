@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         List<Role> newRoles = new ArrayList<>();
         if(!rolesCh.isEmpty()){
             for (Role role : rolesCh) {
-                newRoles.add(roleRepository.findByusername(role.getRole()));
+                newRoles.add(roleRepository.findByRole(role.getRole()));
             }
         }
         user.setRoles(newRoles);
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean remove(User user) {
-        User findUser = userRepository.findByName(user.getUsername());
+        User findUser = userRepository.findByUsername(user.getUsername());
         if (findUser != null) {
             userRepository.deleteById(findUser.getId());
             return true;
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByName(String name) throws UsernameNotFoundException {
-        User user = userRepository.findByName(name);
+        User user = userRepository.findByUsername(name);
 
         if (user == null){
             throw new UsernameNotFoundException("User not found");

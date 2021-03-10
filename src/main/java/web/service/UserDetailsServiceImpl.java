@@ -10,7 +10,7 @@ import web.repository.UserRepository;
 
 import javax.transaction.Transactional;
 
-@Service
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByName(s);
+        User user = userRepository.findByUsername(s);
         if(user == null){
             throw new UsernameNotFoundException("user not found");
         }

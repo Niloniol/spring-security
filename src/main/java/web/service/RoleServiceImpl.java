@@ -9,7 +9,7 @@ import web.repository.RoleRepository;
 import java.util.List;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements RoleService{
 
     @Autowired
     private RoleRepository roleRepository;
@@ -17,7 +17,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public boolean add(Role role) {
-        Role existedRole = roleRepository.findByusername(role.getRole());
+        Role existedRole = roleRepository.findByRole(role.getRole());
 
         if (existedRole != null){
             return false;
@@ -35,13 +35,13 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public Role getByName(String name) {
-        return roleRepository.findByusername(name);
+        return roleRepository.findByRole(name);
     }
 
     @Transactional
     @Override
     public boolean update(Role role) {
-        Role existedRole = roleRepository.findByusername(role.getRole());
+        Role existedRole = roleRepository.findByRole(role.getRole());
 
         if (existedRole != null){
             return false;
@@ -55,4 +55,5 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> listRoles() {
         return roleRepository.findAll();
     }
+
 }

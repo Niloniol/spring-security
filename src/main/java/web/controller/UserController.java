@@ -59,17 +59,6 @@ public class UserController {
 		return "login";
     }
 
-	/*@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutPage(ModelMap modelMap) {
-		modelMap.addAttribute("message", "Sign out of this account?");
-		return "login";
-	}*/
-
-	/*@RequestMapping(value = "/logged_out", method = RequestMethod.POST, )
-	public String logoutSuccess(){
-		return "/hello";
-	}*/
-
     @RequestMapping(value = "/user", method = RequestMethod.GET)
 	public String getUser(Principal principal, ModelMap modelMap) {
 		modelMap.addAttribute("current_user",
