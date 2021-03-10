@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.springframework.org/security/tags">
+      xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet"
+          href="webjars/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
-<sec:authorize access="isAuthenticated()">
-
-</sec:authorize>
-<div>
+<div class="container">
     <form method="POST" th:action="@{/login}">
         <h2>Log in</h2>
         <div>
@@ -21,7 +19,12 @@
             <h4><a th:href="@{/registration}">Sign up</a></h4>
         </div>
     </form>
-    <a th:href="@{/hello}">Home</a>
+    <a class="btn btn-warning" th:href="@{/hello}">Home</a>
+</div>
+
+<div>
+    <script src="webjars/jquery/jquery.min.js"></script>
+    <script src="webjars/bootstrap/js/bootstrap.min.js"></script>
 </div>
 </body>
 </html>
