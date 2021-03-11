@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /*@Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("webjars/**");
+        web.ignoring().antMatchers("resources/**", "/css/**", "/js/**");
     }*/
 
     @Override
@@ -70,8 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 //страницы аутентификаци доступна всем
-                .antMatchers("/login", "/hello", "/registration").permitAll()
-                .antMatchers("webjars/**").permitAll()
+                .antMatchers("/login").anonymous()
+                .antMatchers
+                        ( "/css/**", "/images/**", "/js/**", "/webjars/**",
+                                "/hello", "/registration").permitAll()
                 // защищенные URL
                 .antMatchers("/user").access("hasAnyRole('USER', 'ADMIN')")
                 .antMatchers("/admin/*").access("hasRole('ADMIN')")
