@@ -5,22 +5,90 @@
 <head>
     <meta charset="UTF-8">
     <title>Main page</title>
+    <link rel="stylesheet"
+          href="webjars/bootstrap/css/bootstrap.min.css" />
+
 </head>
 <body>
-<div>
-    <h3 th:text="${current_user}"></h3>
-    <sec:authorize access="!isAuthenticated()">
-        <h4><a th:href="@{/login}">Log in</a></h4>
-        <h4><a th:href="@{/registration}">Register</a></h4>
-    </sec:authorize>
 
-    <h4><a th:href="@{/user}">Show account information</a></h4>
+<nav class="navbar sticky-top navbar-dark bg-dark">
+    <span class="navbar-brand mb-0 h1" th:text="${current_user}"></span>
+    <div class="mr-auto">
+        <text class="navbar-brand">with roles: </text>
+        <div class="navbar-brand" th:each="role : ${user_authorities}">
+            <span th:text="${role.getAuthority()}"></span>
+            <text>/</text>
+        </div>
+    </div>
+    <a class="navbar-text align-content-lg-end" th:href="@{/logout}">Logout</a>
+</nav>
 
-    <h4><a th:href="@{/admin/getAllUsers}">Clients</a></h4>
-
-    <sec:authorize access="isAuthenticated()">
-        <h4><a th:href="@{/logout}">Log out</a></h4>
-    </sec:authorize>
+<div class="">
+<div class="row">
+    <div class="col-2 m-0 p-0">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action active" id="list-admin-list"
+               data-toggle="list" href="#list-admin" role="tab" aria-controls="admin">Admin</a>
+            <a class="list-group-item list-group-item-action" id="list-user-list"
+               data-toggle="list" href="#list-user" role="tab" aria-controls="user">User</a>
+        </div>
+        <!--<iframe class="min-vh-100 w-100 border-0" id="menuF" src="./menu" >Frame is not supported</iframe>-->
+    </div>
+    <div class="col-10 min-vh-100 bg-light">
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="list-admin" role="tabpanel"
+                 aria-labelledby="list-admin-list">
+                <div class="m-3">
+                    <h2>Admin panel</h2>
+                    <ul class="nav nav-tabs" id="tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="userlist-tab" data-toggle="tab" href="#user-list"
+                               role="tab" aria-controls="user-list" aria-selected="true">User list</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="new-user-tab" data-toggle="tab" href="#new-user"
+                               role="tab" aria-controls="new-user" aria-selected="true">New User</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="tabContent">
+                        <div class="tab-pane fade show active" id="user-list" role="tabpanel"
+                             aria-labelledby="userlist-tab">
+                            <iframe class="mh-auto w-100 border-0" height="500px"
+                                    id="user-table" src="./admin/getAllUsers" scrolling="no"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="new-user" role="tabpanel"
+                             aria-labelledby="new-user-tab">
+                            <iframe class="mh-auto w-100 border-0" height="750px"
+                                    id="new-user-frame" src="./admin/newUser"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="list-user" role="tabpanel"
+                 aria-labelledby="list-user-list">
+                <div class="m-3">
+                    <h2>User information page</h2>
+                    <iframe class="mh-auto w-100 border-0" height="200px" id="user-prop-frame" src="./user"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+</div>
+
+<div>
+    <script src="webjars/jquery/jquery.min.js"></script>
+    <script src="webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+        eventer(messageEvent, function (e) {
+            document.getElementById('user-table').style.height = e.data + 'px';
+        }, false);
+    </script>
+</div>
+
 </body>
 </html>

@@ -5,26 +5,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Your data</title>
+    <link rel="stylesheet"
+          href="webjars/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
+<div class="m-3">
+    <h5>About user</h5>
 
-    <th:block th:object="${current_user}">
-        <p>
-        <h2>Your account</h2><br>
+    <table class="table">
 
-        <p>
-        <h3>Username</h3>
-        <h4 th:utext="*{username}"></h4>
+        <thead class="thead">
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Username</th>
+            <th scope="col">E-MAIL</th>
+            <th scope="col">Roles</th>
+        </tr>
+        </thead>
 
-        <p>
-        <h3>E-mail</h3>
-        <h4 th:utext="*{email}"></h4>
+        <tbody>
+        <tr>
+            <td th:utext="${current_user.id}">id</td>
+            <td th:utext="${current_user.username}">Username</td>
+            <td th:utext="${current_user.email}">E-MAIL</td>
+            <td th:utext="${current_user.getRolesString()}">Roles</td>
+        </tr>
+        </tbody>
 
-        <p>
-        <h3>Roles</h3>
-        <h4 th:utext="*{getRolesString()}"></h4>
-    </th:block>
-    <a th:href="@{/hello}">Home</a>
+    </table>
 
+    <div>
+        <script src="webjars/jquery/jquery.min.js"></script>
+        <script src="webjars/bootstrap/js/bootstrap.min.js"></script>
+    </div>
+</div>
 </body>
 </html>

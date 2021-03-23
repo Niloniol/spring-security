@@ -1,6 +1,8 @@
 package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import web.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,17 +38,19 @@ public class UserServiceImpl implements UserService {
             }
         }
         user.setRoles(newRoles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return false;
     }
 
+    @Transactional
     @Override
     public boolean add(User user, List<Role> roles) {
         if (userInit(user, roles)) return false;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
 
+    @Transactional
     @Override
     public boolean remove(User user) {
         User findUser = userRepository.findByUsername(user.getUsername());
@@ -56,11 +61,13 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Transactional
     @Override
     public User getById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
     public User getByName(String name) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(name);
@@ -71,6 +78,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     @Override
     public boolean update(User user, List<Role> roles) {
         if (userInit(user, roles)) return false;
@@ -78,6 +86,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Transactional
     @Override
     public List<User> listUsers() {
         return userRepository.findAll();

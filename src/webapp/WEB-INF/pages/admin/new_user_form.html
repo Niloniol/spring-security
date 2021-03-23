@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"
+          href="../webjars/bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container m-3 mx-auto" style="width: 400px;">
+    <form method="post" action="#" th:action="@{/admin/addUser}" th:object="${userEntity}">
+        <div class="form-group">
+
+            <label for="id" >ID</label>
+            <input class="form-control" id="id" type="number"
+                   th:field="*{id}" disabled><br>
+            <label for="username" >Username</label>
+            <input class="form-control" id="username" type="text"
+                   th:field="*{username}"><br>
+            <label for="email">E-mail</label>
+            <input class="form-control" id="email" type="email"
+                   th:field="*{email}"><br>
+            <label for="password">Password</label>
+            <input class="form-control" id="password" type="password"
+                   th:field="*{password}"><br>
+
+            <select th:field="*{roles}" class="form-control h-50" multiple>
+                <option class="list-group-item" th:each="role : ${role_list}"
+                        th:value="${role.id}"
+                        th:text="${role.role}">
+                </option>
+            </select>
+
+            <input class="form-control btn-primary" type="submit" value="Add">
+        </div>
+    </form>
+</div>
+
+<div>
+    <script src="../webjars/jquery/jquery.min.js"></script>
+    <script src="../webjars/bootstrap/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

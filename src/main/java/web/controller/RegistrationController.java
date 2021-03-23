@@ -34,11 +34,11 @@ public class RegistrationController {
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "registration";
         }
-        if (!userService.update(userForm, roles)){
+        if (!userService.add(userForm, roles)){
             model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
             return "registration";
         }
 
-        return "redirect:/hello";
+        return "redirect:/login";
     }
 }

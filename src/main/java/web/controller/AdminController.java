@@ -3,14 +3,21 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import web.model.Role;
 import web.model.User;
+import web.service.RoleService;
 import web.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,41 +29,61 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/admin/getAllUsers", method = RequestMethod.GET)
-    public String getAllUsers(ModelMap model){
+    @Autowired
+    private RoleService roleService;
 
-        List<User> userList = userService.listUsers();
-        model.addAttribute("user_list", userList);
+    @GetMapping(value = "/admin/getAllUsers")
+    public String getAllUsers(){
         return "admin/admin";
     }
-
-    /*@RequestMapping(value = "/admin/admin", method = RequestMethod.GET)
-    public String getPage(){
-        return "admin/admin";
-    }*/
 
     @ModelAttribute(value = "userEntity")
     public User newEntity() {
         return new User();
     }
 
-    /*@RequestMapping(value = "/admin/addUser", method = RequestMethod.POST)
-    public String addUsers(@ModelAttribute("userEntity") User user) {
-        userService.add(user);
-        return "admin/admin";
-    }*/
+    @ModelAttribute(value = "user_list")
+    public List<User> userList() {
+        return userService.listUsers();
+    }
 
-    @RequestMapping(value = "/admin/actionUser", method = RequestMethod.POST, params = "action=Delete")
-    public String deleteUser(@ModelAttribute("userEntity") User user) {
+    @ModelAttribute(value = "role_list")
+    public List<Role> roleList() {
+        return roleService.listRoles();
+    }
+
+    @RequestMapping(value = "/admin/actionUser", params = {"btn-del"})
+    public String deleteUser(final HttpServletRequest request) {
+        User user = new User();
+        user.setUsername(request.getParameter("btn-del"));
         userService.remove(user);
         return "redirect:/admin/getAllUsers";
     }
 
+    @RequestMapping(value = "/admin/newUser", method = RequestMethod.GET)
+    public ModelAndView newUser() {
 
-    @RequestMapping(value = "/admin/actionUser", method = RequestMethod.POST, params = "action=Update or Add")
-    public String updateUser(@ModelAttribute("userEntity") final User user,
-                             final RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("entity", user);
-        return "redirect:/setUser";
+        List<Role> roleList = roleService.listRoles();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("./admin/new_user_form");
+        modelAndView.addObject("rolesReq", new ArrayList<Role>());
+        modelAndView.addObject("role_list", roleList);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/admin/addUser", method = RequestMethod.POST)
+    public String addUsers(@ModelAttribute("userEntity") User user) {
+        userService.add(user, user.getRoles());
+        return "redirect:/admin/newUser";
+    }
+
+    @RequestMapping(value = "/admin/updateUser", method = RequestMethod.POST)
+    public String updateUsers(@ModelAttribute("user") User user,
+                              ModelMap modelMap) {
+
+        userService.update(user, user.getRoles());
+
+        return "redirect:/admin/getAllUsers";
     }
 }

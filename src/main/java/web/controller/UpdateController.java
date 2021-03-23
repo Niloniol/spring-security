@@ -28,35 +28,7 @@ public class UpdateController {
     @Autowired
     private RoleService roleService;
 
-    private Long userId;
+    private User user;
 
-    @RequestMapping(value = "/setUser", method = RequestMethod.GET)
-    public ModelAndView user(@ModelAttribute("entity") final User user) {
 
-        List<Role> roleList = roleService.listRoles();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin/user_update_form");
-        modelAndView.addObject("roles", new ArrayList<>());
-        modelAndView.addObject("role_list", roleList);
-
-        userId = user.getId();
-        return modelAndView;
-    }
-
-    @ModelAttribute(value = "rEntity")
-    public User newEntity() {
-        return new User();
-    }
-
-    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public String updateUsers(@ModelAttribute("rEntity") User user,
-                              @ModelAttribute("roles") ArrayList<Role> roles,
-                              ModelMap modelMap) {
-
-        user.setId(userId);
-        userService.update(user, roles);
-        userId = null;
-
-        return "redirect:/admin/getAllUsers";
-    }
 }

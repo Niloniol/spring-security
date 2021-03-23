@@ -2,6 +2,8 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import web.model.Role;
+import web.model.User;
 import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -32,15 +37,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
-	public String getUsername(Principal principal, ModelMap model) {
-		String name;
-		try {
-			name = principal.getName();
-		} catch (NullPointerException e){
-			name = "";
-		}
+	public String getUsername(Authentication authentication, ModelMap model) {
 
-		model.addAttribute("current_user", "Hello, " + name);
+		model.addAttribute("current_user", authentication.getName());
+		model.addAttribute("user_authorities", authentication.getAuthorities());
+
+		if(authentication.getAuthorities().stream()
+				.anyMatch(x -> x.getAuthority().equals("ROLE_ADMIN"))) {
+			model.addAttribute("source", "./admin/getAllUsers");
+		} else if (authentication.getAuthorities().stream()
+				.anyMatch(x -> x.getAuthority().equals("ROLE_USER"))){
+			model.addAttribute("source", "./user");
+		}
 		return "hello";
 	}
 
