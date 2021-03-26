@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Your data</title>
@@ -23,13 +23,8 @@
         </tr>
         </thead>
 
-        <tbody>
-        <tr>
-            <td th:utext="${current_user.id}">id</td>
-            <td th:utext="${current_user.username}">Username</td>
-            <td th:utext="${current_user.email}">E-MAIL</td>
-            <td th:utext="${current_user.getRolesString()}">Roles</td>
-        </tr>
+        <tbody id="auth_data">
+
         </tbody>
 
     </table>
@@ -37,6 +32,43 @@
     <div>
         <script src="webjars/jquery/jquery.min.js"></script>
         <script src="webjars/bootstrap/js/bootstrap.min.js"></script>
+        <script th:inline="javascript">
+            const authList = document.getElementById('auth_data');
+            /*<![CDATA[*/
+            const username = /*[[${current_user.username}]]*/ '';
+            /*]]>*/
+
+            const dom_users = (users) => {
+
+                let html = "";
+                users.forEach((user) => {
+                    html += "<tr id=" + user.id + ">";
+                    html += "<td>" + user.id + "</td>";
+                    html += "<td>" + user.username + "</td>";
+                    html += "<td>" + user.email + "</td>";
+                    html += "<td>";
+                    user.roles.forEach((role) => {
+                        html += role.role + " ";
+                    })
+                    html += "</td></tr>"
+                })
+                authList.innerHTML = html;
+            }
+
+            fetch('./admin/api/users/' + username )
+                .then(async response => {
+                    try{
+                        const data = await response.json();
+                        const usersDetails = [];
+                        usersDetails.push(data);
+                        console.log(data);
+                        dom_users(usersDetails);
+                    } catch (error) {
+                        alert('Error in json response: ' + error);
+                    }
+                })
+
+        </script>
     </div>
 </div>
 </body>
