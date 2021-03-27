@@ -63,6 +63,17 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public boolean removeByUsername(String username) {
+        User findUser = userRepository.findByUsername(username);
+        if (findUser != null) {
+            userRepository.deleteById(findUser.getId());
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    @Override
     public User getById(Long id) {
         return userRepository.findById(id).orElse(null);
     }

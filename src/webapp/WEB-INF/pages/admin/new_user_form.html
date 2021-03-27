@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container m-3 mx-auto" style="width: 400px;">
-    <form method="post" action="#" th:action="@{/admin/addUser}" th:object="${userEntity}">
+    <form method="post" action="#" id="new_user_form" th:action="@{/admin/addUser}" th:object="${userEntity}">
         <div class="form-group">
 
             <label for="id" >ID</label>
@@ -26,7 +26,7 @@
             <input class="form-control" id="password" type="password"
                    th:field="*{password}"><br>
 
-            <select th:field="*{roles}" class="form-control h-50" multiple>
+            <select th:field="*{roles}" id="roles" class="form-control h-50" multiple>
                 <option class="list-group-item" th:each="role : ${role_list}"
                         th:value="${role.id}"
                         th:text="${role.role}">

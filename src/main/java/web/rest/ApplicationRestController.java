@@ -37,8 +37,8 @@ public class ApplicationRestController {
         userService.update(user, user.getRoles());
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@RequestBody User user){
-        userService.remove(user);
+    @DeleteMapping("/users/{username}")
+    public void deleteUser(@PathVariable String username){
+        userService.removeByUsername(username);
     }
 }
