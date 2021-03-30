@@ -1,4 +1,4 @@
-package web.rest;
+package web.controller;
 
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
